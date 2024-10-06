@@ -9,6 +9,7 @@ import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/faculty")
@@ -18,6 +19,11 @@ public class FacultyController {
 
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
+    }
+
+    @GetMapping("/color/{color}")
+    public List<Faculty> findFacultiesColor(@PathVariable String color) {
+        return facultyService.findFacultyBuColor(color);
     }
 
     @GetMapping("{id}")
