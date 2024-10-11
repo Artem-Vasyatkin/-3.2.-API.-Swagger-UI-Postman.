@@ -1,13 +1,14 @@
 package ru.hogwarts.school.controller;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
-import java.security.PublicKey;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -16,14 +17,26 @@ import java.util.List;
 @RequestMapping("/student")
 public class StudentController {
 
+    @Autowired
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
+    @GetMapping("/students/age")
+    public List<Student> getStudentByAge(@RequestParam int minAge, @RequestParam int maxAge) {
+        return studentService.getStudentsByAge(minAge, maxAge);
+    }
+
+    @GetMapping("/students/{studentId}/faculty")
+    public Faculty getFacultyByStudentId(@PathVariable Long studentId) {
+        return studentService.getFacultyByStudentId(studentId);
+    }
+
     @GetMapping("/age/{age}")
     public List<Student> findStudentByAge(@PathVariable int age) {
+
         return studentService.findStudentByAge(age);
     }
 
@@ -43,7 +56,7 @@ public class StudentController {
 
     @PutMapping
     public ResponseEntity<Student> editStudent(@RequestBody Student student) {
-        Student foundStudent = studentService.editStudent(student);
+        Student foundStudent = studentService.updateStudent(student);
         if (foundStudent == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
@@ -60,7 +73,7 @@ public class StudentController {
     public ResponseEntity<Collection<Student>> findStudents
             (@RequestParam(required = false) int age) {
         if (age > 0) {
-            return ResponseEntity.ok(studentService.findByAge(age));
+            return ResponseEntity.ok(studentService.findStudentByAge(age));
         }
         return ResponseEntity.ok(Collections.emptyList());
     }
