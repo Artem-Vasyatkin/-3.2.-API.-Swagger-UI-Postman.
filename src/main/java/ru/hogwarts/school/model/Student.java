@@ -16,14 +16,18 @@ public class Student {
     @JoinColumn(name = "faculty_id")
     private Faculty faculty;
 
-    public Student() {
-
-    }
+    @OneToOne(mappedBy = "student", cascade =
+            CascadeType.ALL, orphanRemoval = true)
+    private Avatar avatar;
 
     public Student(long id, String name, int age) {
         this.id = id;
         this.name = name;
         this.age = age;
+    }
+
+    public Student() {
+
     }
 
     @Override
@@ -77,5 +81,8 @@ public class Student {
 
     public Faculty getFaculty() {
         return faculty;
+    }
+
+    public void setAvatar(Avatar avatar) {
     }
 }
