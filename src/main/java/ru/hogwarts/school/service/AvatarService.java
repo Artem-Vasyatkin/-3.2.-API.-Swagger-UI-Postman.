@@ -1,6 +1,8 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
@@ -60,5 +62,10 @@ public class AvatarService {
         } catch (IOException e) {
             throw new RuntimeException("Не удалось загрузить аватар с диска.", e);
         }
+    }
+
+    public Page<Avatar> getAllAvatarsPaginated(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return avatarRepository.findAll(pageRequest);
     }
 }
