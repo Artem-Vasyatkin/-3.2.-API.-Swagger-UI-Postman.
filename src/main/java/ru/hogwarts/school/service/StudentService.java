@@ -48,4 +48,16 @@ public class StudentService {
                 .orElseThrow()
                 .getFaculty();
     }
+
+    public Integer getTotalCount() {
+        return studentRepository.getTotalCount();
+    }
+
+    public Double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    public List<Student> getLastStudents(int count) {
+        return studentRepository.getLastStudents(count);
+    }
 }
