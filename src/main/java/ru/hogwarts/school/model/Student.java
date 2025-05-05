@@ -85,4 +85,7 @@ public class Student {
 
     public void setAvatar(Avatar avatar) {
     }
+
+    public void setFaculty(Faculty faculty) {
+    }
 }
