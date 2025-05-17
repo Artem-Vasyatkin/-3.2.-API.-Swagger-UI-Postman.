@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +15,19 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/avatar")
 public class AvatarController {
-
+    private final AvatarService avatarService;
 
     @Autowired
-    private AvatarService avatarService;
+    public AvatarController(AvatarService avatarService) {
+        this.avatarService = avatarService;
+    }
+
 
     @PostMapping("/upload/{studentId}")
     public Avatar uploadAvatar(@PathVariable Long studentId,
                                @RequestParam("file") MultipartFile file)
             throws IOException {
+
         return avatarService.saveAvatar(file, studentId);
     }
 
@@ -46,5 +51,11 @@ public class AvatarController {
         return ResponseEntity.ok()
                 .headers(headers)
                 .body(data);
+    }
+
+
+    @GetMapping("/list")
+    public Page<Avatar> getAllAvatars(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return avatarService.getAllAvatarsPaginated(page, size);
     }
 }
