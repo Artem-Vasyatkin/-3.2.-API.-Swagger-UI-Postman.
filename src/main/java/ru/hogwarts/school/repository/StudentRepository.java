@@ -20,5 +20,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("SELECT s FROM Student s ORDER BY s.id DESC LIMIT :count")
     List<Student> getLastStudents(@Param("count") int count);
+
+    @Query("SELECT s FROM Student s WHERE UPPER(s.name) LIKE 'A%' ORDER BY s.name")
+    List<Student> findAllByNamesStartingWithA();
 }
 

@@ -9,6 +9,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -125,15 +126,22 @@ public class StudentService {
     }
 
     public Double getAverageAge() {
-        logger.info("Was invoked method for getting average student age");
+        logger.info("Was invoked method for getting average age of all students");
 
-        Double averageAge = studentRepository.getAverageAge();
-        logger.info("Average student age: {}", averageAge);
+        List<Student> students = studentRepository.findAll();
+        logger.debug("Found {} students for age calculation", students.size());
 
-        if (averageAge == null) {
-            logger.warn("No students found to calculate average age");
+        if (students.isEmpty()) {
+            logger.warn("No students found for average age calculation");
+            return 0.0;
         }
 
+        double averageAge = students.stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
+
+        logger.info("Calculated average age: {}", averageAge);
         return averageAge;
     }
 
@@ -149,5 +157,33 @@ public class StudentService {
         logger.info("Retrieved {} last students", students.size());
 
         return students;
+    }
+
+    public List<String> getAllNamesStartingWithAUppercase() {
+        logger.info("Was invoked method for getting all names starting with 'A'");
+
+        long startTime = System.currentTimeMillis();
+
+        List<Student> students = studentRepository.findAll();
+        logger.debug("Found {} total students", students.size());
+
+        List<String> result = students.stream()
+                .map(Student::getName)
+                .filter(name -> {
+                    boolean startsWithA = name.toUpperCase().startsWith("A");
+                    if (!startsWithA) {
+                        logger.trace("Filtered out name: {}", name);
+                    }
+                    return startsWithA;
+                })
+                .map(String::toUpperCase)
+                .sorted()
+                .peek(name -> logger.debug("Processing name: {}", name))
+                .collect(Collectors.toList());
+
+        logger.info("Method completed in {} ms. Found {} matching names",
+                System.currentTimeMillis() - startTime, result.size());
+
+        return result;
     }
 }

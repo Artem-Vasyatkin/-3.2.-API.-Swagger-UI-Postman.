@@ -25,4 +25,12 @@ public class InfoController {
                 environment.getActiveProfiles()[0] : "default";
         return "Current profile: " + activeProfile + ", Port: " + serverPort;
     }
+
+    @GetMapping("/sum")
+    public long calculateSum() {
+        // Используем формулу суммы арифметической прогрессии
+        // S = n*(a1 + an) / 2
+        // Где n = 1_000_000, a1 = 1, an = 1_000_000
+        return (1_000_000L * (1L + 1_000_000L)) / 2;
+    }
 }

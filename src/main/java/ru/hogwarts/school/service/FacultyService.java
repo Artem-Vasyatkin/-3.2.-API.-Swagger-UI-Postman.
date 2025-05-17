@@ -109,4 +109,19 @@ public class FacultyService {
                     return new IllegalArgumentException("Faculty not found");
                 });
     }
+
+    public String getLongestFacultyName() {
+        logger.info("Was invoked method for finding faculty with longest name");
+        List<Faculty> faculties = facultyRepository.findAll();
+        logger.debug("Found {} faculties for name length check");
+        if (faculties.isEmpty()) {
+            logger.warn("No faculties found for name length check");
+            return null;
+        }
+
+        return faculties.stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse(null);
+    }
 }
