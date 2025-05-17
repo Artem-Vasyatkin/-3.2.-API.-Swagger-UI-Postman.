@@ -1,6 +1,9 @@
 package ru.hogwarts.school.controller;
 
 
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +16,27 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hibernate.internal.CoreLogging.logger;
+
 @RestController
 @RequestMapping("/student")
 public class StudentController {
+
+    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @Autowired
     private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
+    }
+
+
+
+    @GetMapping("/names-starting-with-a")
+    public List<String> getNamesStartingWithA() {
+        logger.info("Was invoked GET endpoint for names starting with 'A'");
+        return studentService.getAllNamesStartingWithAUppercase();
     }
 
     @GetMapping("/students/age")
@@ -76,5 +91,21 @@ public class StudentController {
             return ResponseEntity.ok(studentService.findStudentByAge(age));
         }
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @GetMapping("/count")
+    public Integer getStudentsCount() {
+        return studentService.getTotalCount();
+    }
+
+    @GetMapping("/average-age")
+    public Double getAverageAge() {
+        logger.info("Was invoked GET endpoint for average student age");
+        return studentService.getAverageAge();
+    }
+
+    @GetMapping("/last")
+    public List<Student> getLastFiveStudents() {
+        return studentService.getLastStudents(5);
     }
 }
