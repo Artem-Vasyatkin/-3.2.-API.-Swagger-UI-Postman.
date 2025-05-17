@@ -186,4 +186,11 @@ public class StudentService {
 
         return result;
     }
+
+    public List<String> getFirstSixStudentNames() {
+        return studentRepository.findAll().stream()
+                .limit(6)
+                .map(Student::getName)
+                .collect(Collectors.toList());
+    }
 }
