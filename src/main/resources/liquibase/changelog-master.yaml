@@ -1,0 +1,3 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/liquibase/course-four-lesson-three/course-four-lesson-three.yaml
