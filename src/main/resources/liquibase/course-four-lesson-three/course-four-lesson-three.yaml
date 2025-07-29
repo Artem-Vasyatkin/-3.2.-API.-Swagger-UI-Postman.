@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-student-name-index
+      author: hogwarts-admin
+      changes:
+        - createIndex:
+            indexName: idx_student_name
+            tableName: student
+            columns:
+              - column:
+                  name: name
+                  type: varchar(255)
+            remarks: Индекс для ускорения поиска студентов по имени
+
+  - changeSet:
+      id: add-faculty-name-color-index
+      author: hogwarts-admin
+      changes:
+        - createIndex:
+            indexName: idx_faculty_name_color
+            tableName: faculty
+            columns:
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: color
+                  type: varchar(255)
+                remarks: Составной индекс для уникальности пары название-цвет факультета
